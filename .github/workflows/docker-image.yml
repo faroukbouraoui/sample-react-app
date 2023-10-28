@@ -1,4 +1,4 @@
-name: build
+name: workflow_01
 
 on:
   workflow_dispatch:

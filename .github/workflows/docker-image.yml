@@ -20,7 +20,7 @@ jobs:
         run: |
           docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/testing-app-terraform:latest .
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/testing-app-terraform:latest
-      - uses: convictional/trigger-workflow-and-wait@v1.3.0
+      - uses: convictional/trigger-workflow-and-wait@v1.6.1
         with:
           owner: keithweaver
           repo: terraformDeploy-

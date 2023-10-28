@@ -22,7 +22,7 @@ jobs:
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/testing-app-terraform:latest
       - uses: convictional/trigger-workflow-and-wait@v1.6.5
         with:
-          owner: keithweaver
+          owner: faroukbr
           repo: terraformDeploy
           ref: main
           github_token: ${{ secrets.G_ACCESS_TOKEN }}
@@ -34,3 +34,4 @@ jobs:
         run: |
           echo "the infrastructure was provisioning in the Deploy Repo and the app will deploy"
           sleep 10s
+

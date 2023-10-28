@@ -20,13 +20,16 @@ jobs:
         run: |
           docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/testing-app-terraform:latest .
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/testing-app-terraform:latest
-      - uses: convictional/trigger-workflow-and-wait@v1.3.0
+      - uses: convictional/trigger-workflow-and-wait@v1.6.5
         with:
           owner: keithweaver
-          repo: terraformDeploy-
+          repo: terraformDeploy
+          ref: main
           github_token: ${{ secrets.G_ACCESS_TOKEN }}
           workflow_file_name: deploy.yml
-          ref: main
+          trigger_workflow: true
+          wait_workflow: true
+          
       - name: Deploy Web App
         run: |
           echo "the infrastructure was provisioning in the Deploy Repo and the app will deploy"

@@ -1,9 +1,22 @@
 name: build
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
+     inputs:
+      workflow_02:
+        description: 'ًWorkflow 2 which will be triggered'
+        required: true
+        default: 'workflow_02'
+
+      workflow2_github_account:
+        description: 'GitHub Account Owner'
+        required: true
+        default: 'faroukbr'
+
+      workflow2_repo_github:
+        description: 'repo-name'
+        required: true
+        default: 'terraformDeploy' 
 
 jobs:
   build:
@@ -11,7 +24,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Login to Docker Hub
         run: docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_TOKEN }}
@@ -20,16 +33,13 @@ jobs:
         run: |
           docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/testing-app-terraform:latest .
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/testing-app-terraform:latest
-      - uses: convictional/trigger-workflow-and-wait@v1.6.5
-        with:
-          owner: faroukbr
-          repo: terraformDeploy
-          ref: main
-          github_token: ${{ secrets.G_ACCESS_TOKEN }}
-          workflow_file_name: deploy.yml
-          trigger_workflow: true
-          wait_workflow: true
-          
+      - name: Trigging
+        run: |
+          curl -X POST https://api.github.com/repos/faroukbr/terraformDeploy/dispatches \
+          -H 'Accept: application/vnd.github.everest-preview+json' \
+          -u ${{ secrets.G_ACCESS_TOKEN }} \
+          --data '{"event_type": "Trigger Workflow", "client_payload": { "repository": "'"$GITHUB_REPOSITORY"'" }}'
+      - uses: actions/checkout@v4
       - name: Deploy Web App
         run: |
           echo "the infrastructure was provisioning in the Deploy Repo and the app will deploy"
